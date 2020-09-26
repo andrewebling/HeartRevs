@@ -22,6 +22,7 @@ class HRMReader: NSObject {
     }
     
     weak var delegate: HRMReaderDelegate?
+    
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
     
@@ -44,7 +45,7 @@ extension HRMReader: CBCentralManagerDelegate {
         case .poweredOff:
             delegate?.didEncounter(error: "Please switch Bluetooth on.")
         case .poweredOn:
-            centralManager.scanForPeripherals(withServices: [ CBUUID(string: BluetoothGATT.heartRateServiceId.rawValue) ])
+            centralManager.scanForPeripherals(withServices: [ hrmServiceID() ])
         default:
             delegate?.didEncounter(error: "Unhandled Bluetooth error.")
         }
@@ -69,7 +70,7 @@ extension HRMReader: CBCentralManagerDelegate {
                         didConnect peripheral: CBPeripheral) {
         
         self.hrmPeripheral?.delegate = self
-        self.hrmPeripheral?.discoverServices(nil)
+        self.hrmPeripheral?.discoverServices([ hrmServiceID() ])
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -95,6 +96,10 @@ extension HRMReader: CBCentralManagerDelegate {
         }
         delegate?.didEncounter(error: errorMessage)
     }
+    
+    private func hrmServiceID() -> CBUUID {
+        CBUUID(string: BluetoothGATT.heartRateServiceId.rawValue)
+    }
 }
 
 extension HRMReader: CBPeripheralDelegate {
@@ -111,7 +116,8 @@ extension HRMReader: CBPeripheralDelegate {
             let peripheral = self.hrmPeripheral else { return }
         
         for service in services {
-            peripheral.discoverCharacteristics(nil, for: service)
+            peripheral.discoverCharacteristics([ hrmCharacteristicID() ],
+                                               for: service)
         }
     }
     
@@ -127,7 +133,7 @@ extension HRMReader: CBPeripheralDelegate {
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
-            if characteristic.uuid == CBUUID(string: BluetoothGATT.heartRateMeasurementCharacteristicID.rawValue) {
+            if characteristic.uuid == hrmCharacteristicID() {
                 peripheral.setNotifyValue(true, for: characteristic)
                 return
             }
@@ -146,6 +152,10 @@ extension HRMReader: CBPeripheralDelegate {
         if let bpm = heartRateBPM(from: characteristic) {
             delegate?.didUpdate(bpm: bpm)
         }
+    }
+    
+    private func hrmCharacteristicID() -> CBUUID {
+        CBUUID(string: BluetoothGATT.heartRateMeasurementCharacteristicID.rawValue)
     }
     
     private func heartRateBPM(from characteristic: CBCharacteristic) -> Int? {
