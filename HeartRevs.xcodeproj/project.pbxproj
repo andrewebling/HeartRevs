@@ -26,6 +26,7 @@
 		7D29B3A1251BD10E0013D14C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D29B3A3251BD10E0013D14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		7D6492E8251F7B380011F814 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +44,7 @@
 		7D29B389251BD10B0013D14C = {
 			isa = PBXGroup;
 			children = (
+				7D6492E8251F7B380011F814 /* README.md */,
 				7D29B394251BD10C0013D14C /* HeartRevs */,
 				7D29B393251BD10C0013D14C /* Products */,
 				7D29B3A9251BD1930013D14C /* Frameworks */,
