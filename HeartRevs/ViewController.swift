@@ -9,10 +9,10 @@
 import UIKit
 import CoreBluetooth
 
-class ViewController: UIViewController, CBCentralManagerDelegate {
+class ViewController: UIViewController {
 
     var centralManager: CBCentralManager!
-    var hrm: CBPeripheral!
+    var hrmPeripheral: CBPeripheral!
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
@@ -20,11 +20,34 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
         
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
+}
 
+extension ViewController: CBCentralManagerDelegate {
+    
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         print("centralManagerDidUpdateState: \(central)")
-        // [CBUUID(string: "B597C7B9-7593-67DB-C42A-07792987E71E")]
-        centralManager.scanForPeripherals(withServices: nil, options: nil)
+        
+        // from https://www.bluetooth.com/specifications/gatt/services/
+        let hrmCBUUID = "0x180D"
+        
+        switch central.state {
+            
+        case .unknown:
+            print("central.state is .unknown")
+        case .resetting:
+            print("central.state is .resetting")
+        case .unsupported:
+            print("central.state is .unsupported")
+        case .unauthorized:
+            print("central.state is .unauthorized")
+        case .poweredOff:
+            print("central.state is .poweredOff")
+        case .poweredOn:
+            print("central.state is .poweredOn")
+            centralManager.scanForPeripherals(withServices: [ CBUUID(string: hrmCBUUID) ])
+        @unknown default:
+            print("central.state is default case")
+        }
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -32,15 +55,25 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
                         advertisementData: [String : Any],
                         rssi RSSI: NSNumber) {
         
-        self.hrm = peripheral
-//        print("didDiscoverPeripheral: \(self.hrm)")
-        centralManager.connect(peripheral, options: nil)
+        // avoid connecting to multiple HRMs and loosing the reference
+        guard self.hrmPeripheral == nil else { return }
+        
+        self.hrmPeripheral = peripheral
+        
+        // scanning is expensive
+        centralManager.stopScan()
+        centralManager.connect(self.hrmPeripheral)
+        
+
     }
     
     func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
         
         print("didConnect: \(peripheral)")
-//        self.hrm = peripheral
+        
+        self.hrmPeripheral.delegate = self
+        self.hrmPeripheral.discoverServices(nil)
+        
     }
     
     func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
@@ -63,3 +96,46 @@ class ViewController: UIViewController, CBCentralManagerDelegate {
     }
 }
 
+extension ViewController: CBPeripheralDelegate {
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        guard let services = peripheral.services else { return }
+        
+        for service in services {
+            print("Service: \(service) - characteristics: \(String(describing: service.characteristics))")
+            self.hrmPeripheral.discoverCharacteristics(nil, for: service)
+        }
+    }
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        guard let characteristics = service.characteristics else { return }
+        
+        for characteristic in characteristics {
+            print("Characteristic: \(characteristic)")
+            if characteristic.uuid == CBUUID(string: "0x2A37") {
+                peripheral.setNotifyValue(true, for: characteristic)
+            }
+        }
+    }
+    
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        
+        if let bpm = heartRateBPM(from: characteristic) {
+            print("BPM: \(String(describing: bpm))")
+            self.label.text = String(describing: bpm)
+        }
+    }
+    
+    private func heartRateBPM(from characteristic: CBCharacteristic) -> Int? {
+        
+        guard let characteristicData = characteristic.value else { return nil }
+        
+        let byteArray = [UInt8](characteristicData)
+        
+        // format described here: https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=239866
+        let isOneByteBPM = (byteArray[0] & 0x01 == 0)
+        if isOneByteBPM {
+            return Int(byteArray[1])
+        } else {
+            return (Int(byteArray[1]) << 8) + Int(byteArray[2])
+        }
+    }
+}
