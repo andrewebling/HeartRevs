@@ -13,6 +13,7 @@
 		7D29B39D251BD10C0013D14C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B39B251BD10C0013D14C /* Main.storyboard */; };
 		7D29B39F251BD10E0013D14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B39E251BD10E0013D14C /* Assets.xcassets */; };
 		7D29B3A2251BD10E0013D14C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */; };
+		7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		7D29B39E251BD10E0013D14C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D29B3A1251BD10E0013D14C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D29B3A3251BD10E0013D14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +33,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +45,7 @@
 			children = (
 				7D29B394251BD10C0013D14C /* HeartRevs */,
 				7D29B393251BD10C0013D14C /* Products */,
+				7D29B3A9251BD1930013D14C /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,6 +69,14 @@
 				7D29B3A3251BD10E0013D14C /* Info.plist */,
 			);
 			path = HeartRevs;
+			sourceTree = "<group>";
+		};
+		7D29B3A9251BD1930013D14C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -285,7 +297,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8237VMG6NX;
+				DEVELOPMENT_TEAM = UPZMD5QTEZ;
 				INFOPLIST_FILE = HeartRevs/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -303,7 +315,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8237VMG6NX;
+				DEVELOPMENT_TEAM = UPZMD5QTEZ;
 				INFOPLIST_FILE = HeartRevs/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
