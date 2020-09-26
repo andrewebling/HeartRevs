@@ -21,12 +21,13 @@ class HRMReader: NSObject {
         case heartRateMeasurementCharacteristicID = "0x2A37"
     }
     
-    weak var delegate: HRMReaderDelegate?
+    unowned var delegate: HRMReaderDelegate
     
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
     
-    override init() {
+    init(delegate: HRMReaderDelegate) {
+        self.delegate = delegate
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
     }
@@ -39,15 +40,15 @@ extension HRMReader: CBCentralManagerDelegate {
         switch central.state {
             
         case .unsupported:
-            delegate?.didEncounter(error: "Sorry your device does not support Bluetooth.")
+            delegate.didEncounter(error: "Sorry your device does not support Bluetooth.")
         case .unauthorized:
-            delegate?.didEncounter(error: "Please authorise Bluetooth access.")
+            delegate.didEncounter(error: "Please authorise Bluetooth access.")
         case .poweredOff:
-            delegate?.didEncounter(error: "Please switch Bluetooth on.")
+            delegate.didEncounter(error: "Please switch Bluetooth on.")
         case .poweredOn:
             centralManager.scanForPeripherals(withServices: [ hrmServiceID() ])
         default:
-            delegate?.didEncounter(error: "Unhandled Bluetooth error.")
+            delegate.didEncounter(error: "Unhandled Bluetooth error.")
         }
     }
     
@@ -82,7 +83,7 @@ extension HRMReader: CBCentralManagerDelegate {
         if let error = error {
             errorMessage += ": \(error.localizedDescription)"
         }
-        delegate?.didEncounter(error: errorMessage)
+        delegate.didEncounter(error: errorMessage)
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -94,7 +95,7 @@ extension HRMReader: CBCentralManagerDelegate {
         if let error = error {
             errorMessage += ": \(error.localizedDescription)"
         }
-        delegate?.didEncounter(error: errorMessage)
+        delegate.didEncounter(error: errorMessage)
     }
     
     private func hrmServiceID() -> CBUUID {
@@ -108,7 +109,7 @@ extension HRMReader: CBPeripheralDelegate {
                     didDiscoverServices error: Error?) {
         
         if let error = error {
-            delegate?.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
+            delegate.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
             return
         }
         
@@ -126,7 +127,7 @@ extension HRMReader: CBPeripheralDelegate {
                     error: Error?) {
         
         if let error = error {
-            delegate?.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
+            delegate.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
             return
         }
         
@@ -145,12 +146,12 @@ extension HRMReader: CBPeripheralDelegate {
                     error: Error?) {
         
         if let error = error {
-            delegate?.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
+            delegate.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
             return
         }
         
         if let bpm = heartRateBPM(from: characteristic) {
-            delegate?.didUpdate(bpm: bpm)
+            delegate.didUpdate(bpm: bpm)
         }
     }
     

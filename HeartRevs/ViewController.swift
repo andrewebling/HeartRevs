@@ -16,8 +16,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        hrmReader = HRMReader()
-        hrmReader.delegate = self
+        hrmReader = HRMReader(delegate: self)
     }
     
     func show(_ error: String) {
