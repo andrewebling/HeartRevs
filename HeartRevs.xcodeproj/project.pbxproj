@@ -14,6 +14,7 @@
 		7D29B39F251BD10E0013D14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B39E251BD10E0013D14C /* Assets.xcassets */; };
 		7D29B3A2251BD10E0013D14C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */; };
 		7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */; };
+		7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6492E9251F95AE0011F814 /* HRMReader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		7D29B3A3251BD10E0013D14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		7D6492E8251F7B380011F814 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7D6492E9251F95AE0011F814 /* HRMReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRMReader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +67,7 @@
 				7D29B395251BD10C0013D14C /* AppDelegate.swift */,
 				7D29B397251BD10C0013D14C /* SceneDelegate.swift */,
 				7D29B399251BD10C0013D14C /* ViewController.swift */,
+				7D6492E9251F95AE0011F814 /* HRMReader.swift */,
 				7D29B39B251BD10C0013D14C /* Main.storyboard */,
 				7D29B39E251BD10E0013D14C /* Assets.xcassets */,
 				7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */,
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
 				7D29B39A251BD10C0013D14C /* ViewController.swift in Sources */,
 				7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */,
 				7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */,
