@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class HeartRateMonitorViewController: UIViewController {
     
     var hrmReader: HRMReader!
     @IBOutlet weak var label: UILabel!
@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     }
 }
 
-extension ViewController: HRMReaderDelegate {
+extension HeartRateMonitorViewController: HRMReaderDelegate {
     
     func didUpdate(bpm: Int) {
         label.text = String(describing: bpm)
