@@ -15,9 +15,15 @@ protocol HRMReaderDelegate: class {
 
 class HRMReader: NSObject {
     
+    // from https://www.bluetooth.com/specifications/gatt/services/
+    enum BluetoothGATT: String {
+        case heartRateServiceId = "0x180D"
+        case heartRateMeasurementCharacteristicID = "0x2A37"
+    }
+    
     weak var delegate: HRMReaderDelegate?
     var centralManager: CBCentralManager!
-    var hrmPeripheral: CBPeripheral!
+    var hrmPeripheral: CBPeripheral?
     
     override init() {
         super.init()
@@ -28,29 +34,19 @@ class HRMReader: NSObject {
 extension HRMReader: CBCentralManagerDelegate {
     
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        print("centralManagerDidUpdateState: \(central)")
-        
-        // from https://www.bluetooth.com/specifications/gatt/services/
-        let hrmCBUUID = "0x180D"
         
         switch central.state {
             
-        case .unknown:
-            print("central.state is .unknown")
-        case .resetting:
-            print("central.state is .resetting")
         case .unsupported:
-            delegate?.didEncounter(error: "Sorry your device does not support Bluetooth")
+            delegate?.didEncounter(error: "Sorry your device does not support Bluetooth.")
         case .unauthorized:
             delegate?.didEncounter(error: "Please authorise Bluetooth access.")
         case .poweredOff:
-            print("central.state is .poweredOff")
             delegate?.didEncounter(error: "Please switch Bluetooth on.")
         case .poweredOn:
-            print("central.state is .poweredOn")
-            centralManager.scanForPeripherals(withServices: [ CBUUID(string: hrmCBUUID) ])
-        @unknown default:
-            print("central.state is default case")
+            centralManager.scanForPeripherals(withServices: [ CBUUID(string: BluetoothGATT.heartRateServiceId.rawValue) ])
+        default:
+            delegate?.didEncounter(error: "Unhandled Bluetooth error.")
         }
     }
     
@@ -66,64 +62,88 @@ extension HRMReader: CBCentralManagerDelegate {
         
         // scanning is expensive
         centralManager.stopScan()
-        centralManager.connect(self.hrmPeripheral)
-        
-
+        centralManager.connect(peripheral)
     }
     
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+    func centralManager(_ central: CBCentralManager,
+                        didConnect peripheral: CBPeripheral) {
         
-        print("didConnect: \(peripheral)")
-        
-        self.hrmPeripheral.delegate = self
-        self.hrmPeripheral.discoverServices(nil)
-        
+        self.hrmPeripheral?.delegate = self
+        self.hrmPeripheral?.discoverServices(nil)
     }
     
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+    func centralManager(_ central: CBCentralManager,
+                        didFailToConnect peripheral: CBPeripheral,
+                        error: Error?) {
         
-        print("didFailToConnect: \(peripheral)")
+        var errorMessage = "Peripheral failed to connect"
+        
+        if let error = error {
+            errorMessage += ": \(error.localizedDescription)"
+        }
+        delegate?.didEncounter(error: errorMessage)
     }
     
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+    func centralManager(_ central: CBCentralManager,
+                        didDisconnectPeripheral peripheral: CBPeripheral,
+                        error: Error?) {
         
-        print("didDisconnectPeripheral: \(peripheral)")
-    }
-    
-    func centralManager(_ central: CBCentralManager, connectionEventDidOccur event: CBConnectionEvent, for peripheral: CBPeripheral) {
+        var errorMessage = "Peripheral disconnected"
         
-        print("connectionEventDidOccur \(event) - peripheral: \(peripheral)")
-    }
-    
-    func centralManager(_ central: CBCentralManager, didUpdateANCSAuthorizationFor peripheral: CBPeripheral) {
-        print("didUpdateANCSAuthorizationFor \(peripheral)")
+        if let error = error {
+            errorMessage += ": \(error.localizedDescription)"
+        }
+        delegate?.didEncounter(error: errorMessage)
     }
 }
 
 extension HRMReader: CBPeripheralDelegate {
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        guard let services = peripheral.services else { return }
+    
+    func peripheral(_ peripheral: CBPeripheral,
+                    didDiscoverServices error: Error?) {
+        
+        if let error = error {
+            delegate?.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
+            return
+        }
+        
+        guard let services = peripheral.services,
+            let peripheral = self.hrmPeripheral else { return }
         
         for service in services {
-            print("Service: \(service) - characteristics: \(String(describing: service.characteristics))")
-            self.hrmPeripheral.discoverCharacteristics(nil, for: service)
+            peripheral.discoverCharacteristics(nil, for: service)
         }
     }
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+    
+    func peripheral(_ peripheral: CBPeripheral,
+                    didDiscoverCharacteristicsFor service: CBService,
+                    error: Error?) {
+        
+        if let error = error {
+            delegate?.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
+            return
+        }
+        
         guard let characteristics = service.characteristics else { return }
         
         for characteristic in characteristics {
-            print("Characteristic: \(characteristic)")
-            if characteristic.uuid == CBUUID(string: "0x2A37") {
+            if characteristic.uuid == CBUUID(string: BluetoothGATT.heartRateMeasurementCharacteristicID.rawValue) {
                 peripheral.setNotifyValue(true, for: characteristic)
+                return
             }
         }
     }
     
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+    func peripheral(_ peripheral: CBPeripheral,
+                    didUpdateValueFor characteristic: CBCharacteristic,
+                    error: Error?) {
+        
+        if let error = error {
+            delegate?.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
+            return
+        }
         
         if let bpm = heartRateBPM(from: characteristic) {
-            print("BPM: \(String(describing: bpm))")
             delegate?.didUpdate(bpm: bpm)
         }
     }
