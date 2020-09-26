@@ -10,13 +10,23 @@ import UIKit
 
 class HeartRateMonitorViewController: UIViewController {
     
-    var hrmReader: HRMReader!
+    let notificationCenter = NotificationCenter.default
+    var hrmReader: HRMReader?
     @IBOutlet weak var label: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        hrmReader = HRMReader(delegate: self)
+        notificationCenter.addObserver(forName: UIScene.willEnterForegroundNotification, object: nil, queue: nil) { (_) in
+            self.hrmReader = HRMReader(delegate: self)
+        }
+        
+        notificationCenter.addObserver(forName: UIScene.willDeactivateNotification, object: nil, queue: nil) { (_) in
+            self.hrmReader?.willDeactivate()
+            self.hrmReader = nil
+            self.label.text = "---"
+        }
+
     }
     
     func show(_ error: String) {

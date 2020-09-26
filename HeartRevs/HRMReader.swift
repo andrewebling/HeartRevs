@@ -25,11 +25,22 @@ class HRMReader: NSObject {
     
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
+    var subscribedCharacteristic: CBCharacteristic?
     
     init(delegate: HRMReaderDelegate) {
         self.delegate = delegate
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil)
+    }
+    
+    func willDeactivate() {
+        if let characteristic = subscribedCharacteristic {
+            hrmPeripheral?.setNotifyValue(false, for: characteristic)
+            subscribedCharacteristic = nil
+        }
+        if let peripheral = hrmPeripheral {
+            centralManager.cancelPeripheralConnection(peripheral)
+        }
     }
 }
 
@@ -90,12 +101,11 @@ extension HRMReader: CBCentralManagerDelegate {
                         didDisconnectPeripheral peripheral: CBPeripheral,
                         error: Error?) {
         
-        var errorMessage = "Peripheral disconnected"
-        
         if let error = error {
-            errorMessage += ": \(error.localizedDescription)"
+            delegate.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
+        } else {
+            hrmPeripheral = nil
         }
-        delegate.didEncounter(error: errorMessage)
     }
     
     private func hrmServiceID() -> CBUUID {
@@ -136,6 +146,7 @@ extension HRMReader: CBPeripheralDelegate {
         for characteristic in characteristics {
             if characteristic.uuid == hrmCharacteristicID() {
                 peripheral.setNotifyValue(true, for: characteristic)
+                subscribedCharacteristic = characteristic
                 return
             }
         }
