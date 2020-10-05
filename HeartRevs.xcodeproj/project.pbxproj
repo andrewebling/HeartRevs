@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,8 @@
 		7D29B3A2251BD10E0013D14C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */; };
 		7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */; };
 		7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6492E9251F95AE0011F814 /* HRMReader.swift */; };
+		7D649319252AF8370011F814 /* CoreBluetoothMock in Frameworks */ = {isa = PBXBuildFile; productRef = 7D649318252AF8370011F814 /* CoreBluetoothMock */; };
+		7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +31,7 @@
 		7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		7D6492E8251F7B380011F814 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7D6492E9251F95AE0011F814 /* HRMReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRMReader.swift; sourceTree = "<group>"; };
+		7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreBluetoothTypeAliases.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D649319252AF8370011F814 /* CoreBluetoothMock in Frameworks */,
 				7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -72,6 +76,7 @@
 				7D29B39E251BD10E0013D14C /* Assets.xcassets */,
 				7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */,
 				7D29B3A3251BD10E0013D14C /* Info.plist */,
+				7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */,
 			);
 			path = HeartRevs;
 			sourceTree = "<group>";
@@ -100,6 +105,9 @@
 			dependencies = (
 			);
 			name = HeartRevs;
+			packageProductDependencies = (
+				7D649318252AF8370011F814 /* CoreBluetoothMock */,
+			);
 			productName = HeartRevs;
 			productReference = 7D29B392251BD10C0013D14C /* HeartRevs.app */;
 			productType = "com.apple.product-type.application";
@@ -128,6 +136,9 @@
 				Base,
 			);
 			mainGroup = 7D29B389251BD10B0013D14C;
+			packageReferences = (
+				7D649317252AF8370011F814 /* XCRemoteSwiftPackageReference "IOS-CoreBluetooth-Mock" */,
+			);
 			productRefGroup = 7D29B393251BD10C0013D14C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -158,6 +169,7 @@
 				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
 				7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */,
 				7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */,
+				7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */,
 				7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +368,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7D649317252AF8370011F814 /* XCRemoteSwiftPackageReference "IOS-CoreBluetooth-Mock" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/NordicSemiconductor/IOS-CoreBluetooth-Mock.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.12.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		7D649318252AF8370011F814 /* CoreBluetoothMock */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7D649317252AF8370011F814 /* XCRemoteSwiftPackageReference "IOS-CoreBluetooth-Mock" */;
+			productName = CoreBluetoothMock;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 7D29B38A251BD10B0013D14C /* Project object */;
 }

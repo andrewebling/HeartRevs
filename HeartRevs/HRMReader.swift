@@ -5,8 +5,7 @@
 //  Created by Andrew Ebling on 26/09/2020.
 //  Copyright © 2020 Andrew Ebling. All rights reserved.
 //
-
-import CoreBluetooth
+import Foundation
 
 protocol HRMReaderDelegate: class {
     func didUpdate(bpm: Int)
@@ -21,7 +20,11 @@ class HRMReader: NSObject {
         case heartRateMeasurementCharacteristicID = "0x2A37"
     }
     
-    unowned var delegate: HRMReaderDelegate
+    // unowned because:
+    // 1. we want to avoid retain cycles
+    // 2. we can guarantee it will never be nil (doesn't need to be Optional)
+    // 3. avoid unwrapping an unnecessary Optional at every use
+    unowned let delegate: HRMReaderDelegate
     
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
@@ -30,7 +33,9 @@ class HRMReader: NSObject {
     init(delegate: HRMReaderDelegate) {
         self.delegate = delegate
         super.init()
-        centralManager = CBCentralManager(delegate: self, queue: nil)
+        // modified to support CoreBluetoothMock
+        //centralManager = CBCentralManager(delegate: self, queue: nil)
+        centralManager = CBCentralManagerFactory.instance(delegate: self, queue: nil)
     }
     
     func willDeactivate() {
@@ -57,7 +62,7 @@ extension HRMReader: CBCentralManagerDelegate {
         case .poweredOff:
             delegate.didEncounter(error: "Please switch Bluetooth on.")
         case .poweredOn:
-            centralManager.scanForPeripherals(withServices: [ hrmServiceID() ])
+            centralManager.scanForPeripherals(withServices: [ hrmServiceID() ], options:  nil)
         default:
             delegate.didEncounter(error: "Unhandled Bluetooth error.")
         }
@@ -75,7 +80,7 @@ extension HRMReader: CBCentralManagerDelegate {
         
         // scanning is expensive
         centralManager.stopScan()
-        centralManager.connect(peripheral)
+        centralManager.connect(peripheral, options: nil)
     }
     
     func centralManager(_ central: CBCentralManager,
