@@ -6,6 +6,7 @@
 //  Copyright © 2020 Andrew Ebling. All rights reserved.
 //
 import Foundation
+import CoreBluetoothMock
 
 protocol HRMReaderDelegate: class {
     func didUpdate(bpm: Int)
@@ -20,11 +21,7 @@ class HRMReader: NSObject {
         case heartRateMeasurementCharacteristicID = "0x2A37"
     }
     
-    // unowned because:
-    // 1. we want to avoid retain cycles
-    // 2. we can guarantee it will never be nil (doesn't need to be Optional)
-    // 3. avoid unwrapping an unnecessary Optional at every use
-    unowned let delegate: HRMReaderDelegate
+    weak var delegate: HRMReaderDelegate?
     
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
@@ -33,8 +30,11 @@ class HRMReader: NSObject {
     init(delegate: HRMReaderDelegate) {
         self.delegate = delegate
         super.init()
-        // modified to support CoreBluetoothMock
-        //centralManager = CBCentralManager(delegate: self, queue: nil)
+        
+        #if targetEnvironment(simulator)
+        setupMockHeartRateMonitor()
+        #endif
+
         centralManager = CBCentralManagerFactory.instance(delegate: self, queue: nil)
     }
     
@@ -46,6 +46,71 @@ class HRMReader: NSObject {
         if let peripheral = hrmPeripheral {
             centralManager.cancelPeripheralConnection(peripheral)
         }
+        
+        #if targetEnvironment(simulator)
+        tearDownMockHeartRateMonitor()
+        #endif
+    }
+    
+    private func setupMockHeartRateMonitor() {
+        CBMCentralManagerMock.simulateInitialState(.poweredOn)
+        
+        let peripheralSpec = mockHRM()
+        CBMCentralManagerMock.simulatePeripherals([ peripheralSpec ])
+        
+        let delayTime = DispatchTime.now() + .seconds(2)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
+            let bytes: [UInt8] = [ 0x00, 0x3E ] // single byte format, 62 BPM
+            peripheralSpec.simulateValueUpdate(Data(bytes), for:self.mockHRMCharacteristic)
+        }
+        
+    }
+    
+    private func tearDownMockHeartRateMonitor() {
+        CBMCentralManagerMock.tearDownSimulation()
+    }
+    
+    struct DummyPeripheralSpecDelegate: CBMPeripheralSpecDelegate { }
+    
+    let mockHRMCharacteristic = CBMCharacteristicMock(
+        type: CBMUUID(string: "2A37"),
+        properties: [.notify],
+        descriptors: CBMClientCharacteristicConfigurationDescriptorMock()
+    )
+    
+    private func mockHRMService() -> CBMServiceMock {
+        
+        CBMServiceMock(
+            type: CBMUUID(string: "0x180D"),
+            primary: true,
+            characteristics:
+            mockHRMCharacteristic
+            ,
+            CBMCharacteristicMock(
+                type: CBMUUID(string: "0x2A38"),
+                properties: [.read])
+        )
+    }
+    
+    private func mockHRM() -> CBMPeripheralSpec {
+        CBMPeripheralSpec
+            .simulatePeripheral(proximity: .immediate)
+            .advertising(advertisementData: [
+                CBMAdvertisementDataLocalNameKey : "MockHRM",
+                CBMAdvertisementDataServiceUUIDsKey : [
+                    CBMUUID(string: "0x180D"),
+                    CBMUUID(string: "0x180A")
+                ],
+                CBMAdvertisementDataIsConnectable : true as NSNumber
+            ],
+                         withInterval: 0.1)
+        .connectable(
+            name: "MockHRM",
+            services: [ mockHRMService()],
+            delegate: DummyPeripheralSpecDelegate(),
+            connectionInterval: 0.25,
+            mtu: 251)
+        .build()
     }
 }
 
@@ -56,15 +121,15 @@ extension HRMReader: CBCentralManagerDelegate {
         switch central.state {
             
         case .unsupported:
-            delegate.didEncounter(error: "Sorry your device does not support Bluetooth.")
+            delegate?.didEncounter(error: "Sorry your device does not support Bluetooth.")
         case .unauthorized:
-            delegate.didEncounter(error: "Please authorise Bluetooth access.")
+            delegate?.didEncounter(error: "Please authorise Bluetooth access.")
         case .poweredOff:
-            delegate.didEncounter(error: "Please switch Bluetooth on.")
+            delegate?.didEncounter(error: "Please switch Bluetooth on.")
         case .poweredOn:
             centralManager.scanForPeripherals(withServices: [ hrmServiceID() ], options:  nil)
         default:
-            delegate.didEncounter(error: "Unhandled Bluetooth error.")
+            delegate?.didEncounter(error: "Unhandled Bluetooth error.")
         }
     }
     
@@ -99,7 +164,7 @@ extension HRMReader: CBCentralManagerDelegate {
         if let error = error {
             errorMessage += ": \(error.localizedDescription)"
         }
-        delegate.didEncounter(error: errorMessage)
+        delegate?.didEncounter(error: errorMessage)
     }
     
     func centralManager(_ central: CBCentralManager,
@@ -107,7 +172,7 @@ extension HRMReader: CBCentralManagerDelegate {
                         error: Error?) {
         
         if let error = error {
-            delegate.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
+            delegate?.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
         } else {
             hrmPeripheral = nil
         }
@@ -124,7 +189,7 @@ extension HRMReader: CBPeripheralDelegate {
                     didDiscoverServices error: Error?) {
         
         if let error = error {
-            delegate.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
+            delegate?.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
             return
         }
         
@@ -142,7 +207,7 @@ extension HRMReader: CBPeripheralDelegate {
                     error: Error?) {
         
         if let error = error {
-            delegate.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
+            delegate?.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
             return
         }
         
@@ -162,12 +227,12 @@ extension HRMReader: CBPeripheralDelegate {
                     error: Error?) {
         
         if let error = error {
-            delegate.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
+            delegate?.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
             return
         }
         
         if let bpm = heartRateBPM(from: characteristic) {
-            delegate.didUpdate(bpm: bpm)
+            delegate?.didUpdate(bpm: bpm)
         }
     }
     
@@ -180,6 +245,8 @@ extension HRMReader: CBPeripheralDelegate {
         guard let characteristicData = characteristic.value else { return nil }
         
         let byteArray = [UInt8](characteristicData)
+        
+        if byteArray.count <= 1 { return nil }
         
         // format described here: https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=239866
         let isOneByteBPM = (byteArray[0] & 0x01 == 0)
