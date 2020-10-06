@@ -138,6 +138,8 @@ extension HRMReader: CBCentralManagerDelegate {
                         advertisementData: [String : Any],
                         rssi RSSI: NSNumber) {
         
+        print("didDiscover peripheral: \(peripheral)")
+        
         // avoid connecting to multiple HRMs and loosing the reference
         guard self.hrmPeripheral == nil else { return }
         
@@ -151,6 +153,8 @@ extension HRMReader: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager,
                         didConnect peripheral: CBPeripheral) {
         
+        print("didConnect peripheral: \(peripheral)")
+        
         self.hrmPeripheral?.delegate = self
         self.hrmPeripheral?.discoverServices([ hrmServiceID() ])
     }
@@ -158,6 +162,8 @@ extension HRMReader: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager,
                         didFailToConnect peripheral: CBPeripheral,
                         error: Error?) {
+        
+        print("didFailToConnect peripheral: \(peripheral)")
         
         var errorMessage = "Peripheral failed to connect"
         
@@ -170,6 +176,8 @@ extension HRMReader: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager,
                         didDisconnectPeripheral peripheral: CBPeripheral,
                         error: Error?) {
+        
+        print("didDisconnectPeripheral peripheral: \(peripheral)")
         
         if let error = error {
             delegate?.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
@@ -188,6 +196,8 @@ extension HRMReader: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverServices error: Error?) {
         
+        print("didDiscoverServices peripheral: \(peripheral)")
+        
         if let error = error {
             delegate?.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
             return
@@ -205,6 +215,8 @@ extension HRMReader: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverCharacteristicsFor service: CBService,
                     error: Error?) {
+        
+        print("didDiscoverCharacteristics peripheral: \(peripheral) service: \(service)")
         
         if let error = error {
             delegate?.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
@@ -225,6 +237,8 @@ extension HRMReader: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral,
                     didUpdateValueFor characteristic: CBCharacteristic,
                     error: Error?) {
+        
+        print("didUpdateValueFor peripheral: \(peripheral) characteristic: \(characteristic)")
         
         if let error = error {
             delegate?.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
