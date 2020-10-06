@@ -17,6 +17,7 @@
 		7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6492E9251F95AE0011F814 /* HRMReader.swift */; };
 		7D649319252AF8370011F814 /* CoreBluetoothMock in Frameworks */ = {isa = PBXBuildFile; productRef = 7D649318252AF8370011F814 /* CoreBluetoothMock */; };
 		7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */; };
+		7D64931D252CFDC20011F814 /* MockBluetoothHRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		7D6492E8251F7B380011F814 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		7D6492E9251F95AE0011F814 /* HRMReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRMReader.swift; sourceTree = "<group>"; };
 		7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreBluetoothTypeAliases.swift; sourceTree = "<group>"; };
+		7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBluetoothHRM.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */,
 				7D29B3A3251BD10E0013D14C /* Info.plist */,
 				7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */,
+				7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */,
 			);
 			path = HeartRevs;
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 			files = (
 				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
 				7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */,
+				7D64931D252CFDC20011F814 /* MockBluetoothHRM.swift in Sources */,
 				7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */,
 				7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */,
 				7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */,

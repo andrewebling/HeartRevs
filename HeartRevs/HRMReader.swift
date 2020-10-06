@@ -6,7 +6,7 @@
 //  Copyright © 2020 Andrew Ebling. All rights reserved.
 //
 import Foundation
-import CoreBluetoothMock
+
 
 protocol HRMReaderDelegate: class {
     func didUpdate(bpm: Int)
@@ -27,12 +27,15 @@ class HRMReader: NSObject {
     var hrmPeripheral: CBPeripheral?
     var subscribedCharacteristic: CBCharacteristic?
     
+    var mockHRM: MockBluetoothHRM?
+    
     init(delegate: HRMReaderDelegate) {
         self.delegate = delegate
         super.init()
         
         #if targetEnvironment(simulator)
-        setupMockHeartRateMonitor()
+        mockHRM = MockBluetoothHRM()
+        mockHRM?.setupMockHeartRateMonitor()
         #endif
 
         centralManager = CBCentralManagerFactory.instance(delegate: self, queue: nil)
@@ -48,69 +51,8 @@ class HRMReader: NSObject {
         }
         
         #if targetEnvironment(simulator)
-        tearDownMockHeartRateMonitor()
+        mockHRM?.tearDownMockHeartRateMonitor()
         #endif
-    }
-    
-    private func setupMockHeartRateMonitor() {
-        CBMCentralManagerMock.simulateInitialState(.poweredOn)
-        
-        let peripheralSpec = mockHRM()
-        CBMCentralManagerMock.simulatePeripherals([ peripheralSpec ])
-        
-        let delayTime = DispatchTime.now() + .seconds(2)
-        DispatchQueue.main.asyncAfter(deadline: delayTime) {
-            let bytes: [UInt8] = [ 0x00, 0x3E ] // single byte format, 62 BPM
-            peripheralSpec.simulateValueUpdate(Data(bytes), for:self.mockHRMCharacteristic)
-        }
-        
-    }
-    
-    private func tearDownMockHeartRateMonitor() {
-        CBMCentralManagerMock.tearDownSimulation()
-    }
-    
-    struct DummyPeripheralSpecDelegate: CBMPeripheralSpecDelegate { }
-    
-    let mockHRMCharacteristic = CBMCharacteristicMock(
-        type: CBMUUID(string: "2A37"),
-        properties: [.notify],
-        descriptors: CBMClientCharacteristicConfigurationDescriptorMock()
-    )
-    
-    private func mockHRMService() -> CBMServiceMock {
-        
-        CBMServiceMock(
-            type: CBMUUID(string: "0x180D"),
-            primary: true,
-            characteristics:
-            mockHRMCharacteristic
-            ,
-            CBMCharacteristicMock(
-                type: CBMUUID(string: "0x2A38"),
-                properties: [.read])
-        )
-    }
-    
-    private func mockHRM() -> CBMPeripheralSpec {
-        CBMPeripheralSpec
-            .simulatePeripheral(proximity: .immediate)
-            .advertising(advertisementData: [
-                CBMAdvertisementDataLocalNameKey : "MockHRM",
-                CBMAdvertisementDataServiceUUIDsKey : [
-                    CBMUUID(string: "0x180D"),
-                    CBMUUID(string: "0x180A")
-                ],
-                CBMAdvertisementDataIsConnectable : true as NSNumber
-            ],
-                         withInterval: 0.1)
-        .connectable(
-            name: "MockHRM",
-            services: [ mockHRMService()],
-            delegate: DummyPeripheralSpecDelegate(),
-            connectionInterval: 0.25,
-            mtu: 251)
-        .build()
     }
 }
 
