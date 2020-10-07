@@ -38,7 +38,7 @@ class HRMReader: NSObject {
         mockHRM?.setupMockHeartRateMonitor()
         #endif
 
-        centralManager = CBCentralManagerFactory.instance(delegate: self, queue: nil)
+        createCentral()
     }
     
     func willDeactivate() {
@@ -53,6 +53,10 @@ class HRMReader: NSObject {
         #if targetEnvironment(simulator)
         mockHRM?.tearDownMockHeartRateMonitor()
         #endif
+    }
+    
+    private func createCentral() {
+        centralManager = CBCentralManagerFactory.instance(delegate: self, queue: nil)
     }
 }
 
@@ -123,9 +127,10 @@ extension HRMReader: CBCentralManagerDelegate {
         
         if let error = error {
             delegate?.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
-        } else {
-            hrmPeripheral = nil
         }
+        hrmPeripheral = nil
+        // attempt to reconnect
+        createCentral()
     }
     
     private func hrmServiceID() -> CBUUID {
