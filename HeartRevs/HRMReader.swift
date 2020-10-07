@@ -218,7 +218,7 @@ extension HRMReader: CBPeripheralDelegate {
         let isOneByteBPM = (byteArray[0] & 0x01 == 0)
         if isOneByteBPM {
             return Int(byteArray[1])
-        } else if byteArray.count >= 2 {
+        } else if byteArray.count >= 3 {
             return (Int(byteArray[1]) << 8) + Int(byteArray[2])
         } else {
             return nil

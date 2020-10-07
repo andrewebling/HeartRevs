@@ -18,7 +18,8 @@ class MockBluetoothHRM {
         
         let delayTime = DispatchTime.now() + .seconds(2)
         DispatchQueue.main.asyncAfter(deadline: delayTime) {
-            let bytes: [UInt8] = [ 0x00, 0x3E ] // single byte format, 62 BPM
+//            let bytes: [UInt8] = [ 0x00, 0x3E ] // single byte format, 62 BPM
+            let bytes: [UInt8] = [ 0x01, 0x00, 0x3E ] // two byte format, 62 BPM
             peripheralSpec.simulateValueUpdate(Data(bytes), for:self.mockHRMCharacteristic)
         }
         
