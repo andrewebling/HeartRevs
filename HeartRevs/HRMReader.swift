@@ -42,6 +42,9 @@ class HRMReader: NSObject {
     }
     
     func willDeactivate() {
+        // save energy by disconnecting and allowing the radio to power down.
+        // See "Disconnect from a Device When You No Longer Need It
+        // https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/BluetoothBestPractices.html
         if let characteristic = subscribedCharacteristic {
             hrmPeripheral?.setNotifyValue(false, for: characteristic)
             subscribedCharacteristic = nil

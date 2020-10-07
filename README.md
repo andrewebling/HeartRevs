@@ -4,11 +4,11 @@
 
 ## Introduction ##
 
-HeartRevs is a simple work-in-progress prototype project which uses the CoreBluetooth API to connect to a heart rate monitor (HRM) and display the current reading, in Beats Per Minute.
+HeartRevs is a simple work-in-progress prototype project which uses the CoreBluetooth API to connect to a heart rate monitor (HRM) and display the current reading, in Beats Per Minute. It was originally inspired by the [CoreBluetooth tutorial by Jaward Ahmad](https://www.raywenderlich.com/231-core-bluetooth-tutorial-for-ios-heart-rate-monitor), but avoids mixing Bluetooth/UI code for better Separation of Concerns (AKA Massive View Controller code smell), aims for cleaner code and aims to go further in implementing most of [Apple's Bluetooth Best Practices](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/BluetoothBestPractices.html) to maximise energy efficiency and generally be a good iOS citizen.
 
-When run on a real device it automatically scans and connects to the first heart rate monitor it finds and was built and tested using the Wahoo TICKR HRM. When run on the iOS Simulator, it uses the excellent [NordicSemi IOS-CoreBluetooth-Mock library](https://github.com/NordicSemiconductor/IOS-CoreBluetooth-Mock) to simulate a heart rate monitor, with a static BPM of 62.
+When run on a real device it automatically scans and connects to the first heart rate monitor it finds and was built and tested using the Wahoo TICKR HRM. When run on the iOS Simulator, it uses the excellent [NordicSemi IOS-CoreBluetooth-Mock library](https://github.com/NordicSemiconductor/IOS-CoreBluetooth-Mock) to mock out CoreBlueetoth and simulate a heart rate monitor, with a static BPM of 62.
 
-The app supports iOS Dark Mode out of the box, through built-in platform support.
+The app supports iOS Dark Mode out of the box, through making use of built-in platform support.
 
 ## How it Works ##
 
@@ -22,7 +22,7 @@ The connection and update process works as follows:
     2. Connect to the peripheral
 3. On connection to the peripheral, discover the services it supports
 4. Iterate over each Service and discover Characteristics, looking for the HRM Characteristic ID
-5. Iterate over discovered Characteristics and subscribe to notifications on the first HRM Characteristic found
+5. Iterate over discovered Characteristics and subscribe to notifications on the first HRM Characteristic found. This is [more energy efficient](https://developer.apple.com/library/archive/documentation/Performance/Conceptual/EnergyGuide-iOS/BluetoothBestPractices.html)  than polling for updated values.
 6. Wait for updated values to be received
 7. Update the UI
 
@@ -47,7 +47,7 @@ The app aims to be a good citizen and relinquish all Bluetooth resources on goin
 * Although a simple demo/prototype, the app aims to:
   * separate view code from the hardware interface
   * keep the view controller as small as possible
-* The architecture could be further improved by extracting/separating the business logic from `HRMReader.swift`
+* The architecture could be further improved by extracting/separating the business logic from `HRMReader.swift` and re-implement as a state machine.
 
 ## Requirements ##
 
