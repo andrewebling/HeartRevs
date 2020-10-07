@@ -24,7 +24,7 @@ class HeartRateMonitorViewController: UIViewController {
      
 
     func show(_ error: String) {
-        present(errorMessage(error), animated: true, completion: nil)
+        present(errorMessage(error), animated: true)
     }
     
     private func errorMessage(_ error: String) -> UIViewController {

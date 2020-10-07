@@ -196,6 +196,7 @@ extension HRMReader: CBPeripheralDelegate {
         CBUUID(string: BluetoothGATT.heartRateMeasurementCharacteristicID.rawValue)
     }
     
+    // TODO throw, rather than returning nil on error case
     private func heartRateBPM(from characteristic: CBCharacteristic) -> Int? {
         
         guard let characteristicData = characteristic.value else { return nil }
@@ -205,11 +206,14 @@ extension HRMReader: CBPeripheralDelegate {
         if byteArray.count <= 1 { return nil }
         
         // format described here: https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=239866
+        // (Two byte format supports BPMs > 255)
         let isOneByteBPM = (byteArray[0] & 0x01 == 0)
         if isOneByteBPM {
             return Int(byteArray[1])
-        } else {
+        } else if byteArray.count >= 2 {
             return (Int(byteArray[1]) << 8) + Int(byteArray[2])
+        } else {
+            return nil
         }
     }
 }
