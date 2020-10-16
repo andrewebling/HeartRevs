@@ -125,7 +125,7 @@ struct SwiftUIHRMView: View {
                     animationAmount = maxAnimationAmount
                 }
             }
-            Slider(value: $bpm, in: 60...190, step: 1)
+            Slider(value: $bpm.animation(.linear), in: 60...190, step: 1)
                 .padding()
         }
     }
