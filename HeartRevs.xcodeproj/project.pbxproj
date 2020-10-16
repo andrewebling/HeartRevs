@@ -18,6 +18,9 @@
 		7D649319252AF8370011F814 /* CoreBluetoothMock in Frameworks */ = {isa = PBXBuildFile; productRef = 7D649318252AF8370011F814 /* CoreBluetoothMock */; };
 		7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */; };
 		7D64931D252CFDC20011F814 /* MockBluetoothHRM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */; };
+		7DBD823E25397BED00248F4D /* SwiftUIHRMView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD823D25397BED00248F4D /* SwiftUIHRMView.swift */; };
+		7DBD828125397DDB00248F4D /* FlipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD827F25397DDB00248F4D /* FlipView.swift */; };
+		7DBD828225397DDB00248F4D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD828025397DDB00248F4D /* SettingsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +37,9 @@
 		7D6492E9251F95AE0011F814 /* HRMReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRMReader.swift; sourceTree = "<group>"; };
 		7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreBluetoothTypeAliases.swift; sourceTree = "<group>"; };
 		7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBluetoothHRM.swift; sourceTree = "<group>"; };
+		7DBD823D25397BED00248F4D /* SwiftUIHRMView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIHRMView.swift; sourceTree = "<group>"; };
+		7DBD827F25397DDB00248F4D /* FlipView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlipView.swift; sourceTree = "<group>"; };
+		7DBD828025397DDB00248F4D /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +86,9 @@
 				7D29B3A3251BD10E0013D14C /* Info.plist */,
 				7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */,
 				7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */,
+				7DBD823D25397BED00248F4D /* SwiftUIHRMView.swift */,
+				7DBD827F25397DDB00248F4D /* FlipView.swift */,
+				7DBD828025397DDB00248F4D /* SettingsView.swift */,
 			);
 			path = HeartRevs;
 			sourceTree = "<group>";
@@ -170,11 +179,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
+				7DBD823E25397BED00248F4D /* SwiftUIHRMView.swift in Sources */,
 				7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */,
+				7DBD828225397DDB00248F4D /* SettingsView.swift in Sources */,
 				7D64931D252CFDC20011F814 /* MockBluetoothHRM.swift in Sources */,
 				7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */,
 				7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */,
 				7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */,
+				7DBD828125397DDB00248F4D /* FlipView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -250,7 +262,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -304,7 +316,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
