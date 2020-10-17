@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol HRMReaderDelegate: class {
+protocol HRMReaderDelegate {
     func didUpdate(bpm: Int)
     func didEncounter(error: String)
 }
@@ -21,7 +21,7 @@ class HRMReader: NSObject {
         case heartRateMeasurementCharacteristicID = "0x2A37"
     }
     
-    weak var delegate: HRMReaderDelegate?
+    var delegate: HRMReaderDelegate?
     
     var centralManager: CBCentralManager!
     var hrmPeripheral: CBPeripheral?
@@ -196,7 +196,9 @@ extension HRMReader: CBPeripheralDelegate {
         }
         
         if let bpm = heartRateBPM(from: characteristic) {
-            delegate?.didUpdate(bpm: bpm)
+            if bpm > 0 {
+                delegate?.didUpdate(bpm: bpm)
+            }
         }
     }
     

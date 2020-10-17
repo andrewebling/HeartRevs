@@ -9,18 +9,36 @@
 import UIKit
 import SwiftUI
 
+class HRMReaderReceiver: ObservableObject, HRMReaderDelegate {
+    func didUpdate(bpm: Int) {
+        self.bpm = Double(bpm)
+    }
+    
+    func didEncounter(error: String) {
+        self.error = error
+    }
+    
+    @Published var bpm: Double = 62
+    @Published var error: String?
+}
+
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var hrmReader: HRMReader?
+    var contentView: SwiftUIHRMView?
+    var hrmReceiver: HRMReaderReceiver?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        let contentView = SwiftUIHRMView()
+        let receiver = HRMReaderReceiver()
+        self.hrmReceiver = receiver
+        self.contentView = SwiftUIHRMView()
+        
         
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: contentView)
+            window.rootViewController = UIHostingController(rootView: self.contentView.environmentObject(receiver))
             self.window = window
             window.makeKeyAndVisible()
         }
@@ -32,15 +50,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
-
+    
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        if let receiver = self.hrmReceiver {
+            self.hrmReader = HRMReader(delegate:receiver)
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
-        // Called when the scene will move from an active state to an inactive state.
-        // This may occur due to temporary interruptions (ex. an incoming phone call).
+        self.hrmReader?.willDeactivate()
+        self.hrmReader = nil
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {

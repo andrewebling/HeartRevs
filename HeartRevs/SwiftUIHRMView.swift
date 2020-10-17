@@ -20,13 +20,9 @@ struct SwiftUIHRMView: View {
     private let heartSFSymbolName = "heart"
     @State var showingSettings = false
     
-    @State private var bpm: Double = 60 {
-        mutating didSet {
-            bpmIncreasing = oldValue < bpm
-        }
-    }
+//    @State private var bpm: Double = 60
+    @EnvironmentObject var hrmReceiver: HRMReaderReceiver
     @State private var animationAmount: CGFloat = 1
-    var bpmIncreasing = true
     
     @State private var flipped = false
     
@@ -80,8 +76,8 @@ struct SwiftUIHRMView: View {
             ZStack {
 
                 ZStack {
-                    FlipView(front: CardFace(title: String(Int(bpm)), subTitle: "BPM", background: Color(UIColor.systemBackground)),
-                             back: CardFace(title: String(Int(100 * Double(bpm) / Double(maxHR))), subTitle: "%", background: Color(UIColor.systemBackground)), showBack: $flipped)
+                    FlipView(front: CardFace(title: " \(Int(self.hrmReceiver.bpm)) ", subTitle: "BPM", background: Color(UIColor.systemBackground)),
+                             back: CardFace(title: String(Int(100 * Double(self.hrmReceiver.bpm) / Double(maxHR))), subTitle: "%", background: Color(UIColor.systemBackground)), showBack: $flipped)
                     
                     Image(systemName: heartSFSymbolName)
                         .font(.system(size: 200))
@@ -93,11 +89,11 @@ struct SwiftUIHRMView: View {
                                 .scaleEffect(animationAmount)
                                 .onAnimationCompleted(for: animationAmount) {
                                     if(animationAmount == maxAnimationAmount) {
-                                        withAnimation(.easeOut(duration: (1 - pulseDutyCycle) * secondsInMinute / (bpm))) {
+                                        withAnimation(.easeOut(duration: (1 - pulseDutyCycle) * secondsInMinute / (self.hrmReceiver.bpm))) {
                                             animationAmount = 1.0
                                         }
                                     }else {
-                                        withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (bpm))) {
+                                        withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (self.hrmReceiver.bpm))) {
                                             animationAmount = maxAnimationAmount
                                         }
                                     }
@@ -113,34 +109,31 @@ struct SwiftUIHRMView: View {
                 }
                 RevCounterOutline()
                     .foregroundColor(Color(UIColor.secondarySystemFill))
-                if bpmIncreasing {
-                    RevCounter(bpm: $bpm)
-                        .foregroundColor(colorFor(bpm: bpm))
-                        .brightness(0.2)
-                        .blur(radius: blurFor(bpm: bpm))
-                }
-                RevCounter(bpm: $bpm)
-                    .foregroundColor(colorFor(bpm: bpm))
-                
-                
+                RevCounter()
+                    .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
+                    .brightness(0.2)
+                    .blur(radius: blurFor(bpm: self.hrmReceiver.bpm))
+                RevCounter()
+                    .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
             }
             .onAppear {
-                withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (bpm))) {
+                withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (self.hrmReceiver.bpm))) {
                     animationAmount = maxAnimationAmount
                 }
             }
             
-            Slider(value: $bpm.animation(.linear), in: 60...190, step: 1)
+            Slider(value: $hrmReceiver.bpm.animation(.linear), in: 60...190, step: 1)
                 .padding()
         }
     }
 }
 
 struct RevCounter: Shape {
-    @Binding var bpm: Double
+    @EnvironmentObject var hrmReceiver: HRMReaderReceiver
+    
     func path(in rect: CGRect) -> Path {
         var p = Path()
-        p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((bpm - 60) / (190 - 60)))), clockwise: false)
+        p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((Double(hrmReceiver.bpm) - 60) / (190 - 60)))), clockwise: false)
 
         return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
     }
