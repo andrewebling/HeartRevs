@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D29B395251BD10C0013D14C /* AppDelegate.swift */; };
 		7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D29B397251BD10C0013D14C /* SceneDelegate.swift */; };
-		7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D29B399251BD10C0013D14C /* HeartRateMonitorViewController.swift */; };
-		7D29B39D251BD10C0013D14C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B39B251BD10C0013D14C /* Main.storyboard */; };
 		7D29B39F251BD10E0013D14C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B39E251BD10E0013D14C /* Assets.xcassets */; };
 		7D29B3A2251BD10E0013D14C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */; };
 		7D29B3AB251BD1930013D14C /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */; };
@@ -30,8 +28,6 @@
 		7D29B392251BD10C0013D14C /* HeartRevs.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HeartRevs.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7D29B395251BD10C0013D14C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7D29B397251BD10C0013D14C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		7D29B399251BD10C0013D14C /* HeartRateMonitorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRateMonitorViewController.swift; sourceTree = "<group>"; };
-		7D29B39C251BD10C0013D14C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7D29B39E251BD10E0013D14C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7D29B3A1251BD10E0013D14C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7D29B3A3251BD10E0013D14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -82,22 +78,12 @@
 		7D29B394251BD10C0013D14C /* HeartRevs */ = {
 			isa = PBXGroup;
 			children = (
-				7D29B395251BD10C0013D14C /* AppDelegate.swift */,
-				7D29B397251BD10C0013D14C /* SceneDelegate.swift */,
-				7D29B399251BD10C0013D14C /* HeartRateMonitorViewController.swift */,
-				7D6492E9251F95AE0011F814 /* HRMReader.swift */,
-				7D29B39B251BD10C0013D14C /* Main.storyboard */,
+				7DBD8305253B641200248F4D /* Core */,
+				7DBD8304253B63EB00248F4D /* Bluetooth */,
+				7DBD8307253B645D00248F4D /* UI */,
 				7D29B39E251BD10E0013D14C /* Assets.xcassets */,
 				7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */,
 				7D29B3A3251BD10E0013D14C /* Info.plist */,
-				7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */,
-				7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */,
-				7DBD823D25397BED00248F4D /* SwiftUIHRMView.swift */,
-				7DBD827F25397DDB00248F4D /* FlipView.swift */,
-				7DBD828025397DDB00248F4D /* SettingsView.swift */,
-				7DBD82FB253B5EBE00248F4D /* HRMReaderReceiver.swift */,
-				7DBD82FE253B62FE00248F4D /* RevCounter.swift */,
-				7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */,
 			);
 			path = HeartRevs;
 			sourceTree = "<group>";
@@ -108,6 +94,38 @@
 				7D29B3AA251BD1930013D14C /* CoreBluetooth.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		7DBD8304253B63EB00248F4D /* Bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				7D64931A252AF95D0011F814 /* CoreBluetoothTypeAliases.swift */,
+				7D6492E9251F95AE0011F814 /* HRMReader.swift */,
+				7DBD82FB253B5EBE00248F4D /* HRMReaderReceiver.swift */,
+				7D64931C252CFDC20011F814 /* MockBluetoothHRM.swift */,
+			);
+			path = Bluetooth;
+			sourceTree = "<group>";
+		};
+		7DBD8305253B641200248F4D /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				7D29B395251BD10C0013D14C /* AppDelegate.swift */,
+				7D29B397251BD10C0013D14C /* SceneDelegate.swift */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		7DBD8307253B645D00248F4D /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				7DBD823D25397BED00248F4D /* SwiftUIHRMView.swift */,
+				7DBD82FE253B62FE00248F4D /* RevCounter.swift */,
+				7DBD827F25397DDB00248F4D /* FlipView.swift */,
+				7DBD828025397DDB00248F4D /* SettingsView.swift */,
+				7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -176,7 +194,6 @@
 			files = (
 				7D29B3A2251BD10E0013D14C /* LaunchScreen.storyboard in Resources */,
 				7D29B39F251BD10E0013D14C /* Assets.xcassets in Resources */,
-				7D29B39D251BD10C0013D14C /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,7 +207,6 @@
 				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
 				7DBD8302253B636900248F4D /* AnimationCompletionObserverModifier.swift in Sources */,
 				7DBD823E25397BED00248F4D /* SwiftUIHRMView.swift in Sources */,
-				7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */,
 				7DBD828225397DDB00248F4D /* SettingsView.swift in Sources */,
 				7D64931D252CFDC20011F814 /* MockBluetoothHRM.swift in Sources */,
 				7D29B396251BD10C0013D14C /* AppDelegate.swift in Sources */,
@@ -205,14 +221,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		7D29B39B251BD10C0013D14C /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				7D29B39C251BD10C0013D14C /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		7D29B3A0251BD10E0013D14C /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
