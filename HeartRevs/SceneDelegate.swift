@@ -9,19 +9,6 @@
 import UIKit
 import SwiftUI
 
-class HRMReaderReceiver: ObservableObject, HRMReaderDelegate {
-    func didUpdate(bpm: Int) {
-        self.bpm = Double(bpm)
-    }
-    
-    func didEncounter(error: String) {
-        self.error = error
-    }
-    
-    @Published var bpm: Double = 62
-    @Published var error: String?
-}
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
