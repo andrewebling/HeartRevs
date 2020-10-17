@@ -8,56 +8,22 @@
 
 import SwiftUI
 
-struct HeartRateZone {
-    let minBPM: Double
-    let maxBPM: Double
-    let color: Color
-    let blur: CGFloat
-}
-
 struct SwiftUIHRMView: View {
     
     private let heartSFSymbolName = "heart"
-    @State var showingSettings = false
     
-//    @State private var bpm: Double = 60
     @EnvironmentObject var hrmReceiver: HRMReaderReceiver
-    @State private var animationAmount: CGFloat = 1
     
+    @State private var animationAmount: CGFloat = 1
+    @State var showingSettings = false
     @State private var flipped = false
     
     private let maxHR = 190
     private let maxAnimationAmount = CGFloat(1.04)
     private let pulseDutyCycle = 0.15
     private let secondsInMinute = 60.0
-    private let hrZones = [
-        HeartRateZone(minBPM: 0, maxBPM: 140, color: .green, blur: 0),
-        HeartRateZone(minBPM: 140, maxBPM: 175, color: .yellow, blur: 3),
-        HeartRateZone(minBPM: 175, maxBPM: 190, color: .red, blur: 8)
-    ]
     
-    func colorFor(bpm: Double) -> Color {
-        
-        var color: Color = .black
-        hrZones.forEach { (zone) in
-            if bpm <= zone.maxBPM && bpm >= zone.minBPM {
-                color = zone.color
-            }
-        }
-        return color
-    }
-    
-    func blurFor(bpm: Double) -> CGFloat {
-        var blur: CGFloat = 0
-        
-        hrZones.forEach { (zone) in
-            if bpm <= zone.maxBPM && bpm >= zone.minBPM {
-                blur = zone.blur
-            }
-        }
-        
-        return blur
-    }
+
     
     var body: some View {
         VStack {
@@ -107,14 +73,7 @@ struct SwiftUIHRMView: View {
                         self.flipped.toggle()
                     }
                 }
-                RevCounterOutline()
-                    .foregroundColor(Color(UIColor.secondarySystemFill))
                 RevCounter()
-                    .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
-                    .brightness(0.2)
-                    .blur(radius: blurFor(bpm: self.hrmReceiver.bpm))
-                RevCounter()
-                    .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
             }
             .onAppear {
                 withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (self.hrmReceiver.bpm))) {
@@ -128,25 +87,8 @@ struct SwiftUIHRMView: View {
     }
 }
 
-struct RevCounter: Shape {
-    @EnvironmentObject var hrmReceiver: HRMReaderReceiver
-    
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((Double(hrmReceiver.bpm) - 60) / (190 - 60)))), clockwise: false)
 
-        return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
-    }
-}
 
-struct RevCounterOutline: Shape {
-    func path(in rect: CGRect) -> Path {
-        var p = Path()
-        p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(60), clockwise: false)
-
-        return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
-    }
-}
 
 // Currently in SwiftUI there is no way to set a completion block to execute code on
 // completion of an animation. Workaround is taken from
