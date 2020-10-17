@@ -28,6 +28,7 @@ class HRMReader: NSObject {
     var subscribedCharacteristic: CBCharacteristic?
     
     var mockHRM: MockBluetoothHRM?
+    var consoleLogging = false
     
     init(delegate: HRMReaderDelegate) {
         self.delegate = delegate
@@ -56,6 +57,12 @@ class HRMReader: NSObject {
         #if targetEnvironment(simulator)
         mockHRM?.tearDownMockHeartRateMonitor()
         #endif
+    }
+    
+    func console(_ string: String) {
+        if consoleLogging {
+            print(string)
+        }
     }
     
     private func createCentral() {
@@ -87,7 +94,7 @@ extension HRMReader: CBCentralManagerDelegate {
                         advertisementData: [String : Any],
                         rssi RSSI: NSNumber) {
         
-        print("didDiscover peripheral: \(peripheral)")
+        console("didDiscover peripheral: \(peripheral)")
         
         // avoid connecting to multiple HRMs and loosing the reference
         guard self.hrmPeripheral == nil else { return }
@@ -102,7 +109,7 @@ extension HRMReader: CBCentralManagerDelegate {
     func centralManager(_ central: CBCentralManager,
                         didConnect peripheral: CBPeripheral) {
         
-        print("didConnect peripheral: \(peripheral)")
+        console("didConnect peripheral: \(peripheral)")
         
         self.hrmPeripheral?.delegate = self
         self.hrmPeripheral?.discoverServices([ hrmServiceID() ])
@@ -112,7 +119,7 @@ extension HRMReader: CBCentralManagerDelegate {
                         didFailToConnect peripheral: CBPeripheral,
                         error: Error?) {
         
-        print("didFailToConnect peripheral: \(peripheral)")
+        console("didFailToConnect peripheral: \(peripheral)")
         
         var errorMessage = "Peripheral failed to connect"
         
@@ -126,7 +133,7 @@ extension HRMReader: CBCentralManagerDelegate {
                         didDisconnectPeripheral peripheral: CBPeripheral,
                         error: Error?) {
         
-        print("didDisconnectPeripheral peripheral: \(peripheral)")
+        console("didDisconnectPeripheral peripheral: \(peripheral)")
         
         if let error = error {
             delegate?.didEncounter(error: "Peripheral disconnected: \(error.localizedDescription)")
@@ -146,7 +153,7 @@ extension HRMReader: CBPeripheralDelegate {
     func peripheral(_ peripheral: CBPeripheral,
                     didDiscoverServices error: Error?) {
         
-        print("didDiscoverServices peripheral: \(peripheral)")
+        console("didDiscoverServices peripheral: \(peripheral)")
         
         if let error = error {
             delegate?.didEncounter(error: "Service discovery error: \(error.localizedDescription)")
@@ -166,7 +173,7 @@ extension HRMReader: CBPeripheralDelegate {
                     didDiscoverCharacteristicsFor service: CBService,
                     error: Error?) {
         
-        print("didDiscoverCharacteristics peripheral: \(peripheral) service: \(service)")
+        console("didDiscoverCharacteristics peripheral: \(peripheral) service: \(service)")
         
         if let error = error {
             delegate?.didEncounter(error: "Characteristics discovery error: \(error.localizedDescription)")
@@ -188,7 +195,7 @@ extension HRMReader: CBPeripheralDelegate {
                     didUpdateValueFor characteristic: CBCharacteristic,
                     error: Error?) {
         
-        print("didUpdateValueFor peripheral: \(peripheral) characteristic: \(characteristic)")
+        console("didUpdateValueFor peripheral: \(peripheral) characteristic: \(characteristic)")
         
         if let error = error {
             delegate?.didEncounter(error: "Characteristic update value error: \(error.localizedDescription)")
