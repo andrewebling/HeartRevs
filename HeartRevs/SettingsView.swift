@@ -27,7 +27,7 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
-            .navigationBarItems(trailing:                 Button("Done") {
+            .navigationBarItems(trailing: Button("Done") {
                 presentationMode.wrappedValue.dismiss()
             })
         }

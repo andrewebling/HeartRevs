@@ -17,6 +17,7 @@ struct HeartRateZone {
 
 struct SwiftUIHRMView: View {
     
+    private let heartSFSymbolName = "heart"
     @State var showingSettings = false
     
     @State private var bpm: Double = 60 {
@@ -77,24 +78,17 @@ struct SwiftUIHRMView: View {
                 .padding()
             }
             ZStack {
-                RevCounterOutline()
-                    .foregroundColor(Color(UIColor.secondarySystemFill))
-                if bpmIncreasing {
-                    RevCounter(bpm: $bpm)
-                        .foregroundColor(colorFor(bpm: bpm))
-                        .brightness(0.2)
-                        .blur(radius: blurFor(bpm: bpm))
-                }
-                RevCounter(bpm: $bpm)
-                    .foregroundColor(colorFor(bpm: bpm))
-                
+
                 ZStack {
-                    Image(systemName: "heart")
-                        .font(.system(size: 180))
+                    FlipView(front: CardFace(title: String(Int(bpm)), subTitle: "BPM", background: Color(UIColor.systemBackground)),
+                             back: CardFace(title: String(Int(100 * Double(bpm) / Double(maxHR))), subTitle: "%", background: Color(UIColor.systemBackground)), showBack: $flipped)
+                    
+                    Image(systemName: heartSFSymbolName)
+                        .font(.system(size: 200))
                         .foregroundColor(.red)
                         .overlay(
-                            Image(systemName: "heart")
-                                .font(.system(size: 180))
+                            Image(systemName: heartSFSymbolName)
+                                .font(.system(size: 200))
                                 .foregroundColor(.red)
                                 .scaleEffect(animationAmount)
                                 .onAnimationCompleted(for: animationAmount) {
@@ -110,14 +104,24 @@ struct SwiftUIHRMView: View {
                                 }
                         )
                         .rotation3DEffect(self.flipped ? Angle(degrees: 180) : Angle(degrees: 0), axis: (x: CGFloat(0), y: CGFloat(10), z: CGFloat(0)))
-                    FlipView(front: CardFace(title: String(Int(bpm)), subTitle: "BPM", background: Color(UIColor.systemBackground)),
-                             back: CardFace(title: String(Int(100 * Double(bpm) / Double(maxHR))), subTitle: "%", background: Color(UIColor.systemBackground)), showBack: $flipped)
+  
                 }
                 .onTapGesture {
                     withAnimation {
                         self.flipped.toggle()
                     }
                 }
+                RevCounterOutline()
+                    .foregroundColor(Color(UIColor.secondarySystemFill))
+                if bpmIncreasing {
+                    RevCounter(bpm: $bpm)
+                        .foregroundColor(colorFor(bpm: bpm))
+                        .brightness(0.2)
+                        .blur(radius: blurFor(bpm: bpm))
+                }
+                RevCounter(bpm: $bpm)
+                    .foregroundColor(colorFor(bpm: bpm))
+                
                 
             }
             .onAppear {
@@ -125,6 +129,7 @@ struct SwiftUIHRMView: View {
                     animationAmount = maxAnimationAmount
                 }
             }
+            
             Slider(value: $bpm.animation(.linear), in: 60...190, step: 1)
                 .padding()
         }
