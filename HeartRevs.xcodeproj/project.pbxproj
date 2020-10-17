@@ -23,6 +23,7 @@
 		7DBD828225397DDB00248F4D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD828025397DDB00248F4D /* SettingsView.swift */; };
 		7DBD82FC253B5EBE00248F4D /* HRMReaderReceiver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD82FB253B5EBE00248F4D /* HRMReaderReceiver.swift */; };
 		7DBD82FF253B62FE00248F4D /* RevCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD82FE253B62FE00248F4D /* RevCounter.swift */; };
+		7DBD8302253B636900248F4D /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		7DBD828025397DDB00248F4D /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		7DBD82FB253B5EBE00248F4D /* HRMReaderReceiver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HRMReaderReceiver.swift; sourceTree = "<group>"; };
 		7DBD82FE253B62FE00248F4D /* RevCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevCounter.swift; sourceTree = "<group>"; };
+		7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCompletionObserverModifier.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,6 +97,7 @@
 				7DBD828025397DDB00248F4D /* SettingsView.swift */,
 				7DBD82FB253B5EBE00248F4D /* HRMReaderReceiver.swift */,
 				7DBD82FE253B62FE00248F4D /* RevCounter.swift */,
+				7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */,
 			);
 			path = HeartRevs;
 			sourceTree = "<group>";
@@ -185,6 +188,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D6492EA251F95AE0011F814 /* HRMReader.swift in Sources */,
+				7DBD8302253B636900248F4D /* AnimationCompletionObserverModifier.swift in Sources */,
 				7DBD823E25397BED00248F4D /* SwiftUIHRMView.swift in Sources */,
 				7D29B39A251BD10C0013D14C /* HeartRateMonitorViewController.swift in Sources */,
 				7DBD828225397DDB00248F4D /* SettingsView.swift in Sources */,
