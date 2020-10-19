@@ -10,17 +10,11 @@ import SwiftUI
 
 struct SwiftUIHRMView: View {
     
-
     @EnvironmentObject var hrmReceiver: HRMReaderReceiver
     
-    @State private var animationAmount: CGFloat = 1
     @State var showingSettings = false
     @State private var flipped = false
-    
     @State private var maxHR = 190
-
-    
-
     
     var body: some View {
         VStack {
@@ -37,29 +31,26 @@ struct SwiftUIHRMView: View {
                 .padding()
             }
             ZStack {
-
+                
                 HeartView(flipped: $flipped,
                           bpm: $hrmReceiver.bpm,
                           maxHR: $maxHR)
-                .onTapGesture {
-                    withAnimation {
-                        self.flipped.toggle()
+                    .onTapGesture {
+                        withAnimation {
+                            self.flipped.toggle()
+                        }
                     }
-                }
+                
                 RevCounter(bpm: $hrmReceiver.bpm.animation(.linear))
             }
-
-
-            Slider(value: $hrmReceiver.bpm.animation(.linear), in: 60...190, step: 1)
+            
+            Slider(value: $hrmReceiver.bpm.animation(.linear),
+                   in: 60...190,
+                   step: 1)
                 .padding()
         }
     }
 }
-
-
-
-
-
 
 // end of animation completion workaround
 struct SwiftUIHRMView_Previews: PreviewProvider {

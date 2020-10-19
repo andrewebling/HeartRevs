@@ -29,10 +29,13 @@ struct RevCounter: View {
         ZStack {
             RevCounterOutline()
                 .foregroundColor(Color(UIColor.secondarySystemFill))
+            
+            // provides staged glow, drawn underneath main bar
             RevCounterBar(bpm: bpm)
                 .foregroundColor(colorFor(bpm: bpm))
                 .brightness(0.2)
                 .blur(radius: blurFor(bpm: bpm))
+            
             RevCounterBar(bpm: bpm)
                 .foregroundColor(colorFor(bpm: bpm))
         }
