@@ -17,7 +17,7 @@ struct RevCounter: View {
         let blur: CGFloat
     }
     
-    @EnvironmentObject var hrmReceiver: HRMReaderReceiver
+    @Binding var bpm: Double
     
     private let hrZones = [
         HeartRateZone(minBPM: 0, maxBPM: 140, color: .green, blur: 0),
@@ -26,22 +26,30 @@ struct RevCounter: View {
     ]
     
     var body: some View {
-        RevCounterOutline()
-            .foregroundColor(Color(UIColor.secondarySystemFill))
-        RevCounterBar()
-            .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
-            .brightness(0.2)
-            .blur(radius: blurFor(bpm: self.hrmReceiver.bpm))
-        RevCounterBar()
-            .foregroundColor(colorFor(bpm: self.hrmReceiver.bpm))
+        ZStack {
+            RevCounterOutline()
+                .foregroundColor(Color(UIColor.secondarySystemFill))
+            RevCounterBar(bpm: bpm)
+                .foregroundColor(colorFor(bpm: bpm))
+                .brightness(0.2)
+                .blur(radius: blurFor(bpm: bpm))
+            RevCounterBar(bpm: bpm)
+                .foregroundColor(colorFor(bpm: bpm))
+        }
     }
     
     struct RevCounterBar: Shape {
-        @EnvironmentObject var hrmReceiver: HRMReaderReceiver
+        
+        var bpm: Double
+        
+        var animatableData: Double {
+            get { bpm }
+            set { self.bpm = newValue }
+        }
         
         func path(in rect: CGRect) -> Path {
             var p = Path()
-            p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((Double(hrmReceiver.bpm) - 60) / (190 - 60)))), clockwise: false)
+            p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((bpm - 60) / (190 - 60)))), clockwise: false)
 
             return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
         }

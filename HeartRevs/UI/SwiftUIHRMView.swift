@@ -73,14 +73,14 @@ struct SwiftUIHRMView: View {
                         self.flipped.toggle()
                     }
                 }
-                RevCounter()
+                RevCounter(bpm: $hrmReceiver.bpm.animation(.linear))
             }
             .onAppear {
                 withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (self.hrmReceiver.bpm))) {
                     animationAmount = maxAnimationAmount
                 }
             }
-            
+
             Slider(value: $hrmReceiver.bpm.animation(.linear), in: 60...190, step: 1)
                 .padding()
         }
