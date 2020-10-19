@@ -49,6 +49,7 @@ struct SwiftUIHRMView: View {
                 Slider(value: $hrmReceiver.bpm.animation(.linear),
                        in: 60...190,
                        step: 1)
+                    .transition(.move(edge: .bottom))
                     .padding()
             }
         }
