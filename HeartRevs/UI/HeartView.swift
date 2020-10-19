@@ -22,17 +22,16 @@ struct HeartView: View {
     private let secondsInMinute = 60.0
     private let heartSymbolSize = CGFloat(200)
     private let heartColor = Color.red
-    private let backgroundColor = Color(UIColor.systemBackground)
-    
+
     var body: some View {
         ZStack {
             FlipView(front: CardFace(title: " \(Int(bpm)) ",
                                      subTitle: "BPM",
-                                     background: backgroundColor),
+                                     background: Color(UIColor.systemBackground)),
                      
                      back: CardFace(title: String(Int(100 * Double(bpm) / Double(maxHR))),
                                     subTitle: "%",
-                                    background: backgroundColor),
+                                    background: Color(UIColor.systemBackground)),
                      
                      showBack: $flipped)
             
