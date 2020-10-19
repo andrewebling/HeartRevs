@@ -15,6 +15,7 @@ struct SwiftUIHRMView: View {
     @State var showingSettings = false
     @State private var flipped = false
     @State private var maxHR = 190
+    @State private var sliderShowing = false
     
     var body: some View {
         VStack {
@@ -44,10 +45,17 @@ struct SwiftUIHRMView: View {
                 RevCounter(bpm: $hrmReceiver.bpm.animation(.linear))
             }
             
-            Slider(value: $hrmReceiver.bpm.animation(.linear),
-                   in: 60...190,
-                   step: 1)
-                .padding()
+            if sliderShowing {
+                Slider(value: $hrmReceiver.bpm.animation(.linear),
+                       in: 60...190,
+                       step: 1)
+                    .padding()
+            }
+        }
+        .onTapGesture(count: 2) {
+            withAnimation {
+                self.sliderShowing.toggle()
+            }
         }
     }
 }
