@@ -23,6 +23,7 @@ struct CardFace<SomeTypeOfView : View> : View {
                 .multilineTextAlignment(.center)
                 .font(.system(size: 50))
                 .background(background)
+            
             Text(subTitle)
         }
     }

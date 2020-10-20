@@ -44,22 +44,26 @@ struct HeartView: View {
                         .foregroundColor(heartColor)
                         .scaleEffect(animationAmount)
                         .onAnimationCompleted(for: animationAmount) {
+                            
                             if(animationAmount == maxAnimationAmount) {
-                                withAnimation(.easeOut(duration: (1 - pulseDutyCycle) * secondsInMinute / (bpm))) {
+                                withAnimation(.easeOut(duration: (1 - pulseDutyCycle) * secondsInMinute / bpm)) {
                                     animationAmount = 1.0
                                 }
                             }else {
-                                withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (bpm))) {
+                                withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / bpm)) {
                                     animationAmount = maxAnimationAmount
                                 }
                             }
                         }
                 )
-                .rotation3DEffect(self.flipped ? Angle(degrees: 180) : Angle(degrees: 0), axis: (x: CGFloat(0), y: CGFloat(10), z: CGFloat(0)))
+                .rotation3DEffect(self.flipped ? Angle(degrees: 180) : Angle(degrees: 0),
+                                  axis: (x: CGFloat(0),
+                                         y: CGFloat(10),
+                                         z: CGFloat(0)))
 
         }
         .onAppear {
-            withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / (bpm))) {
+            withAnimation(.easeIn(duration: pulseDutyCycle * secondsInMinute / bpm)) {
                 animationAmount = maxAnimationAmount
             }
         }
