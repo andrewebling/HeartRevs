@@ -70,6 +70,7 @@ struct FlipEffect: GeometryEffect {
     
     func effectValue(size: CGSize) -> ProjectionTransform {
         
+        // schedule this update after the current view update, to avoid warnings/undefinide behaviour
         DispatchQueue.main.async {
             self.flipped = self.angle >= 90 && self.angle < 270
         }

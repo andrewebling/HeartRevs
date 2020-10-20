@@ -51,17 +51,34 @@ struct RevCounter: View {
         }
         
         func path(in rect: CGRect) -> Path {
+            
             var p = Path()
-            p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(120 + (300 * ((bpm - 60) / (190 - 60)))), clockwise: false)
+            
+            p.addArc(center:
+                    CGPoint(x: rect.size.width/2,
+                            y: (rect.size.height/2)-12),
+                     radius: 150,
+                     startAngle: .degrees(120),
+                     endAngle: .degrees(120 + (300 * ((bpm - 60) / (190 - 60)))),
+                     clockwise: false)
 
             return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
         }
     }
 
     struct RevCounterOutline: Shape {
+        
         func path(in rect: CGRect) -> Path {
+            
             var p = Path()
-            p.addArc(center: CGPoint(x: rect.size.width/2, y: (rect.size.height/2)-12), radius: 150, startAngle: .degrees(120), endAngle: .degrees(60), clockwise: false)
+            
+            p.addArc(center:
+                        CGPoint(x: rect.size.width/2,
+                                y: (rect.size.height/2)-12),
+                     radius: 150,
+                     startAngle: .degrees(120),
+                     endAngle: .degrees(60),
+                     clockwise: false)
 
             return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
         }
