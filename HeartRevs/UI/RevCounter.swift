@@ -34,9 +34,9 @@ struct RevCounter: View {
             
             // provides staged glow, drawn underneath main bar
             RevCounterBar(bpm: bpm, minimum: minimum, maximum: maximum)
-                .foregroundColor(colorFor(bpm: bpm))
+                .foregroundColor(colorFor(bpm: bpm) ?? .black)
                 .brightness(0.2)
-                .blur(radius: blurFor(bpm: bpm))
+                .blur(radius: blurFor(bpm: bpm) ?? 0)
             
             RevCounterBar(bpm: bpm, minimum: minimum, maximum: maximum)
                 .foregroundColor(colorFor(bpm: bpm))
@@ -83,35 +83,24 @@ struct RevCounter: View {
                      startAngle: .degrees(120),
                      endAngle: .degrees(60),
                      clockwise: false)
-
+            
             return p.strokedPath(.init(lineWidth: 20, lineCap: .round))
         }
     }
     
-    private func colorFor(bpm: Double) -> Color {
-        
+    private func zoneFor(bpm: Double) -> HeartRateZone? {
         let percent = (bpm / maximum) * 100
-        var color: Color = .black
-        hrZones.forEach { (zone) in
-            if percent <= zone.maxPercent && percent >= zone.minPercent {
-                color = zone.color
-            }
-        }
         
-        return color
+        return hrZones.filter {
+            percent <= $0.maxPercent && percent >= $0.minPercent
+        }.first
     }
     
-    private func blurFor(bpm: Double) -> CGFloat {
-        
-        let percent = (bpm / maximum) * 100
-        var blur: CGFloat = 0
-        
-        hrZones.forEach { (zone) in
-            if percent <= zone.maxPercent && percent >= zone.minPercent {
-                blur = zone.blur
-            }
-        }
-        
-        return blur
+    private func colorFor(bpm: Double) -> Color? {
+        return zoneFor(bpm: bpm)?.color
+    }
+    
+    private func blurFor(bpm: Double) -> CGFloat? {
+        return zoneFor(bpm: bpm)?.blur
     }
 }
