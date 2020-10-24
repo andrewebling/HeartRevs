@@ -14,7 +14,7 @@ struct HeartView: View {
     
     @Binding var flipped: Bool
     @Binding var bpm: Double
-    @Binding var maxHR: Int
+    @Binding var maxHR: Double
     @State var animationAmount: CGFloat = 1.0
     
     private let maxAnimationAmount = CGFloat(1.04)

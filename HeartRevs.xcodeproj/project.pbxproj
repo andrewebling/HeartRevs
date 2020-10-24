@@ -23,6 +23,7 @@
 		7DBD82FF253B62FE00248F4D /* RevCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD82FE253B62FE00248F4D /* RevCounter.swift */; };
 		7DBD8302253B636900248F4D /* AnimationCompletionObserverModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */; };
 		7DBD8385253E0CC100248F4D /* HeartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD8384253E0CC100248F4D /* HeartView.swift */; };
+		7DBD838F2544894400248F4D /* HeartRevsDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD838E2544894400248F4D /* HeartRevsDefaults.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		7DBD82FE253B62FE00248F4D /* RevCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RevCounter.swift; sourceTree = "<group>"; };
 		7DBD8301253B636900248F4D /* AnimationCompletionObserverModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationCompletionObserverModifier.swift; sourceTree = "<group>"; };
 		7DBD8384253E0CC100248F4D /* HeartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartView.swift; sourceTree = "<group>"; };
+		7DBD838E2544894400248F4D /* HeartRevsDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeartRevsDefaults.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +82,7 @@
 		7D29B394251BD10C0013D14C /* HeartRevs */ = {
 			isa = PBXGroup;
 			children = (
+				7DBD838D2544893700248F4D /* Model */,
 				7DBD8305253B641200248F4D /* Core */,
 				7DBD8304253B63EB00248F4D /* Bluetooth */,
 				7DBD8307253B645D00248F4D /* UI */,
@@ -129,6 +132,14 @@
 				7DBD8384253E0CC100248F4D /* HeartView.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		7DBD838D2544893700248F4D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				7DBD838E2544894400248F4D /* HeartRevsDefaults.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,6 +228,7 @@
 				7DBD82FF253B62FE00248F4D /* RevCounter.swift in Sources */,
 				7D64931B252AF95D0011F814 /* CoreBluetoothTypeAliases.swift in Sources */,
 				7DBD82FC253B5EBE00248F4D /* HRMReaderReceiver.swift in Sources */,
+				7DBD838F2544894400248F4D /* HeartRevsDefaults.swift in Sources */,
 				7D29B398251BD10C0013D14C /* SceneDelegate.swift in Sources */,
 				7DBD828125397DDB00248F4D /* FlipView.swift in Sources */,
 			);

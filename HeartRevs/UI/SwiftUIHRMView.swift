@@ -11,10 +11,10 @@ import SwiftUI
 struct SwiftUIHRMView: View {
     
     @EnvironmentObject var hrmReceiver: HRMReaderReceiver
+    @ObservedObject var settings = HeartRevsDefaults.shared
     
     @State var showingSettings = false
     @State private var flipped = false
-    @State private var maxHR = 190
     @State private var sliderShowing = false
     
     var body: some View {
@@ -35,19 +35,21 @@ struct SwiftUIHRMView: View {
                 
                 HeartView(flipped: $flipped,
                           bpm: $hrmReceiver.bpm,
-                          maxHR: $maxHR)
+                          maxHR: $settings.maximumHeartRate)
                     .onTapGesture {
                         withAnimation {
                             self.flipped.toggle()
                         }
                     }
                 
-                RevCounter(bpm: $hrmReceiver.bpm.animation(.linear))
+                RevCounter(bpm: $hrmReceiver.bpm.animation(.linear),
+                           minimum: $settings.restingHeartRate,
+                           maximum: $settings.maximumHeartRate)
             }
             
             if sliderShowing {
                 Slider(value: $hrmReceiver.bpm.animation(.linear),
-                       in: 60...190,
+                       in: settings.restingHeartRate...settings.maximumHeartRate,
                        step: 1)
                     .transition(.move(edge: .bottom))
                     .padding()

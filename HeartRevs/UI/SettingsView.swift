@@ -7,22 +7,23 @@
 //
 
 import SwiftUI
+import Combine
 
 struct SettingsView: View {
     
     @Environment(\.presentationMode) var presentationMode
-    @State private var resting = 60
-    @State private var maximum = 190
+    
+    @ObservedObject var settings = HeartRevsDefaults.shared
     
     var body: some View {
         NavigationView {
             List {
                 Section(header: Text("Heart Rates")) {
-                    Stepper(value: $resting, in: 10...1000) {
-                        Text("Resting: \(resting) BPM")
+                    Stepper(value: $settings.restingHeartRate, in: 10...120) {
+                        Text("Resting: \(settings.restingHeartRate, specifier: "%.0f") BPM")
                     }
-                    Stepper(value: $maximum, in: 100...250) {
-                        Text("Maximum: \(maximum) BPM")
+                    Stepper(value: $settings.maximumHeartRate, in: 100...250) {
+                        Text("Maximum: \(settings.maximumHeartRate, specifier: "%.0f") BPM")
                     }
                 }
             }
