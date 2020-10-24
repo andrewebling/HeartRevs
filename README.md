@@ -32,7 +32,6 @@ The app aims to be a good citizen and relinquish all Bluetooth resources on goin
 
 * Improved error recovery - plenty of scope here!
 * Improve the UI/UX:
-  * Add rev-counter UI, to graphically depict the current heart rate as a percentage of the difference between resting heart rate and maximum heart rate.
   * Show a `UIActivityIndicator` while connecting to the Bluetooth peripheral, rather than ---.
   * Connect to the HRM with the highest RSSI (signal strength), rather than the first one discovered.
 * Add an `XCTest` targe and use the CoreBluetooth Mock library to comprehensively test:
@@ -51,7 +50,7 @@ The app aims to be a good citizen and relinquish all Bluetooth resources on goin
 
 ## Requirements ##
 
-* Xcode 11.7
-* iOS 13.6 (uses modern `UISceneSession` APIs for the UI)
+* Xcode 12
+* iOS 14
 * Apple iOS Developer Programme membership (for running on a real device)
 * Bluetooth LE Heart Rate Monitor (when running on a real device)
